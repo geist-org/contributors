@@ -28,7 +28,7 @@ const filterContributors = data => {
 
 const getContributors = async (path, repo) => {
   const query = `query($path: String!, $repo: String!) {
-    repository(owner: "zeit-ui", name: $repo) {
+    repository(owner: "geist-ui", name: $repo) {
       object(expression: "master") {
         ... on Commit {
           history(first: 100, path: $path) {

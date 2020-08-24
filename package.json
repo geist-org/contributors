@@ -2,8 +2,8 @@
   "name": "contributors",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:zeit-ui/contributors.git",
-  "author": "unix <unix.bio@gmail.com>",
+  "repository": "git@github.com:geist-ui/contributors.git",
+  "author": "Geist Org",
   "license": "MIT",
   "devDependencies": {
     "@now/node": "^1.5.1",

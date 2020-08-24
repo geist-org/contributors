@@ -1,6 +1,6 @@
 ## Contributors
 
-Get contributors to each file in organization ZEIT UI.
+Get contributors to each file in organization Geist UI.
 
 <br/>
 
