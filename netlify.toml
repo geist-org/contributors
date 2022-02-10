@@ -1,5 +1,7 @@
 [build]
-command = "yarn build"
-
-[functions]
-directory = "src"
+  command = "yarn build"
+  functions = "functions/"
+  publish = "public"
+[[redirects]]
+  from = "/api/users"
+  to = "/.netlify/functions/users"

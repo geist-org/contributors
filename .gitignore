@@ -105,3 +105,6 @@ dist
 .tern-port
 
 .now
+
+# Local Netlify folder
+.netlify

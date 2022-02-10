@@ -3,19 +3,39 @@ import { GraphQLClient } from 'graphql-request'
 
 const client = new GraphQLClient('https://api.github.com/graphql', {
   headers: {
-    Authorization: `Bearer ${process.env.GIT_ORG_READONLY}`,
+    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
   },
 })
 
-const filterContributors = data => {
+export type RepositoryHistory = {
+  author: {
+    name: string
+    user: {
+      url: string
+      avatarUrl: string
+    }
+  }
+}
+
+export type RepositoryResult = {
+  repository: {
+    object: {
+      history: {
+        nodes: Array<RepositoryHistory>
+      }
+    }
+  }
+}
+
+const filterContributors = (data: RepositoryResult) => {
   if (!data || !data.repository) return []
   const repoObject = data.repository.object
   if (!repoObject || !repoObject.history) return []
   const nodes = repoObject.history.nodes || []
   let users = [],
-    keys = {}
+    keys: Record<string, string | number> = {}
   for (const item of nodes) {
-    const key = item.author.user.url
+    const key: string = item.author.user.url
     if (!keys[key]) {
       keys[key] = 1
       users.push({
@@ -62,8 +82,8 @@ const empty = {
 export const handler: Handler = async (event, context) => {
   if (event.httpMethod !== 'GET') return empty
 
-  const path = event.queryStringParameters.path
-  const repo = event.queryStringParameters.repo || 'react'
+  const path = event.queryStringParameters?.path
+  const repo = event.queryStringParameters?.repo || 'geist-ui'
   if (!path) return empty
 
   try {
