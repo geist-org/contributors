@@ -2,6 +2,3 @@
   command = "yarn build"
   functions = "functions/"
   publish = "public"
-[[redirects]]
-  from = "/api/users"
-  to = "/.netlify/functions/users"

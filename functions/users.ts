@@ -75,8 +75,14 @@ const getContributors = async (path: string, repo: string) => {
   return filterContributors(data)
 }
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, POST',
+}
 const empty = {
   statusCode: 204,
+  headers,
   body: JSON.stringify([]),
 }
 export const handler: Handler = async (event, context) => {
@@ -88,7 +94,7 @@ export const handler: Handler = async (event, context) => {
 
   try {
     const users = await getContributors(path, repo)
-    return { statusCode: 200, body: JSON.stringify(users) }
+    return { statusCode: 200, headers, body: JSON.stringify(users) }
   } catch (e) {
     return empty
   }
