@@ -1,4 +1,5 @@
-const { GraphQLClient } = require('graphql-request')
+import { Handler } from '@netlify/functions'
+import { GraphQLClient } from 'graphql-request'
 
 const client = new GraphQLClient('https://api.github.com/graphql', {
   headers: {
@@ -11,7 +12,8 @@ const filterContributors = data => {
   const repoObject = data.repository.object
   if (!repoObject || !repoObject.history) return []
   const nodes = repoObject.history.nodes || []
-  let users = [], keys = {}
+  let users = [],
+    keys = {}
   for (const item of nodes) {
     const key = item.author.user.url
     if (!keys[key]) {
@@ -26,7 +28,7 @@ const filterContributors = data => {
   return users
 }
 
-const getContributors = async (path, repo) => {
+const getContributors = async (path: string, repo: string) => {
   const query = `query($path: String!, $repo: String!) {
     repository(owner: "geist-org", name: $repo) {
       object(expression: "master") {
@@ -47,22 +49,27 @@ const getContributors = async (path, repo) => {
     }
   }`
   const data = await client.request(query, {
-    path, repo,
+    path,
+    repo,
   })
   return filterContributors(data)
 }
 
-module.exports = async (req, res) => {
-  if (req.method !== 'GET') return res.status(403).send({ message: 'only support GET.' })
-  const path = req.query.path
-  const repo = req.query.repo || 'react'
-  if (!path) return res.status(204).send([])
-  
+const empty = {
+  statusCode: 204,
+  body: JSON.stringify([]),
+}
+export const handler: Handler = async (event, context) => {
+  if (event.httpMethod !== 'GET') return empty
+
+  const path = event.queryStringParameters.path
+  const repo = event.queryStringParameters.repo || 'react'
+  if (!path) return empty
+
   try {
     const users = await getContributors(path, repo)
-    return res.status(200).send(users)
+    return { statusCode: 200, body: JSON.stringify(users) }
   } catch (e) {
-    return res.status(204).send([])
+    return empty
   }
-  
 }
