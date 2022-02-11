@@ -12,6 +12,7 @@
   "devDependencies": {
     "@geist-ui/prettier-config": "^1.0.1",
     "@types/node": "^14.18.11",
+    "netlify-lambda": "^2.0.15",
     "prettier": "^2.5.1"
   },
   "dependencies": {
